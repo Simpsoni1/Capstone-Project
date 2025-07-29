@@ -3,10 +3,12 @@ var app = builder.Build();
 
 app.MapGet("/books", () => "books");
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/books/{id}", () => 1);
 
-//app.MapGet("/books/{id}");
+app.MapPost("/books", () => "");
 
-app.MapPost("/books");
+app.MapPut("/books/{id}", () => "");
+
+app.MapDelete("/books/{id}", () => "");
 
 app.Run();
