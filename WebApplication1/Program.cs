@@ -19,4 +19,6 @@ app.MapGet("/loans", () => "users");
 
 app.MapPost("/loans", () => "");
 
+app.MapPost("/returns", () => "");
+
 app.Run();
