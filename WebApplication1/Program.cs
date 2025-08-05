@@ -11,4 +11,8 @@ app.MapPut("/books/{id}", () => "");
 
 app.MapDelete("/books/{id}", () => "");
 
+app.MapGet("/users", () => "users");
+
+app.MapPost("/users", () => "");
+
 app.Run();
