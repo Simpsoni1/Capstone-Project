@@ -1,6 +1,7 @@
 public class Library
 {
-    public int id { get; set; }
-    public string? name { get; set; }
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? Author { get; set; }
 
 }
