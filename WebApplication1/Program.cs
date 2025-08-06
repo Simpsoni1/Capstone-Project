@@ -32,19 +32,19 @@ app.MapGet("/books", async (LibraryDb db) =>
 
 app.MapGet("/books/{id}", async (int id, LibraryDb db) =>
     await db.Library.FindAsync(id)
-        is Library library
-            ? Results.Ok(library)
+        is Books books
+            ? Results.Ok(books)
             : Results.NotFound());
 
-app.MapPost("/books", async (Library library, LibraryDb db) =>
+app.MapPost("/books", async (Books books, LibraryDb db) =>
 {
-    db.Library.Add(library);
+    db.Library.Add(books);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/books/{library.Id}", library);
+    return Results.Created($"/books/{books.Id}", books);
 });
 
-app.MapPut("/books/{id}", async (int id, Library inputBook, LibraryDb db) =>
+app.MapPut("/books/{id}", async (int id, Books inputBook, LibraryDb db) =>
 {
     var book = await db.Library.FindAsync(id);
 
@@ -60,7 +60,7 @@ app.MapPut("/books/{id}", async (int id, Library inputBook, LibraryDb db) =>
 
 app.MapDelete("/books/{id}", async (int id, LibraryDb db) =>
 {
-    if (await db.Library.FindAsync(id) is Library book)
+    if (await db.Library.FindAsync(id) is Books book)
     {
         db.Library.Remove(book);
         await db.SaveChangesAsync();
