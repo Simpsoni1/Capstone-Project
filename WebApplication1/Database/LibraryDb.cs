@@ -6,5 +6,5 @@ class LibraryDb : DbContext
 
     public DbSet<Books> LibraryBooks => Set<Books>();
     public DbSet<Users> LibraryUsers => Set<Users>();
-    public DbSet<Users> LibraryLoans => Set<Users>();
+    public DbSet<Loans> LibraryLoans => Set<Loans>();
 }
