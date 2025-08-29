@@ -50,7 +50,7 @@ app.MapPost("/books", async (BooksDTO books, LibraryDb db) =>
     return Results.Created($"/books/{updatedBooks.Entity.Id}", updatedBooks.Entity);
 });
 
-app.MapPut("/books/{id}", async (int id, Books inputBook, LibraryDb db) =>
+app.MapPut("/books/{id}", async (int id, BooksDTO inputBook, LibraryDb db) =>
 {
     var book = await db.LibraryBooks.FindAsync(id);
 
@@ -79,12 +79,18 @@ app.MapDelete("/books/{id}", async (int id, LibraryDb db) =>
 app.MapGet("/users", async (LibraryDb db) =>
     await db.LibraryUsers.ToListAsync());
 
-app.MapPost("/users", async (Users users, LibraryDb db) =>
+app.MapPost("/users", async (UserDTO users, LibraryDb db) =>
 {
-    db.LibraryUsers.Add(users);
+    var usersToAdd = new Users
+    {
+        Name = users.Name,
+        Age = users.Age
+    };
+
+    var updatedUsers = db.LibraryUsers.Add(usersToAdd);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/user/{users.Id}", users);
+    return Results.Created($"/books/{updatedUsers.Entity.Id}", updatedUsers.Entity);
 });
 
 app.MapGet("/loans", async (LibraryDb db) =>
