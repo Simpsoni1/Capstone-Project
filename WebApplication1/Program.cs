@@ -96,15 +96,21 @@ app.MapPost("/users", async (UserDTO users, LibraryDb db) =>
 app.MapGet("/loans", async (LibraryDb db) =>
     await db.LibraryLoans.ToListAsync());
 
-app.MapPost("/loans", async (Loans loans, LibraryDb db) =>
+app.MapPost("/loans/checkout", async (LoansDTO loans, LibraryDb db) =>
 {
-    db.LibraryLoans.Add(loans);
+    var loansToAdd = new Loans
+    {
+        BookId = loans.BookId,
+        UserId = loans.UserId
+    };
+
+    var updatedLoans = db.LibraryLoans.Add(loansToAdd);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/loans/{loans.Id}", loans);
+    return Results.Created($"/books/{updatedLoans.Entity.Id}", updatedLoans.Entity);
 });
 
-app.MapPost("/returns", async (Loans loans, LibraryDb db) =>
+app.MapPost("/loans/returns", async (Loans loans, LibraryDb db) =>
 {
     db.LibraryLoans.Add(loans);
     await db.SaveChangesAsync();
