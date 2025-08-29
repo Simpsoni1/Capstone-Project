@@ -36,12 +36,18 @@ app.MapGet("/books/{id}", async (int id, LibraryDb db) =>
             ? Results.Ok(books)
             : Results.NotFound());
 
-app.MapPost("/books", async (Books books, LibraryDb db) =>
+app.MapPost("/books", async (BooksDTO books, LibraryDb db) =>
 {
-    db.LibraryBooks.Add(books);
+    var booksToAdd = new Books
+    {
+        Name = books.Name,
+        Author = books.Author
+    };
+
+    var updatedBooks = db.LibraryBooks.Add(booksToAdd);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/books/{books.Id}", books);
+    return Results.Created($"/books/{updatedBooks.Entity.Id}", updatedBooks.Entity);
 });
 
 app.MapPut("/books/{id}", async (int id, Books inputBook, LibraryDb db) =>
