@@ -90,7 +90,7 @@ app.MapPost("/users", async (UserDTO users, LibraryDb db) =>
     var updatedUsers = db.LibraryUsers.Add(usersToAdd);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/books/{updatedUsers.Entity.Id}", updatedUsers.Entity);
+    return Results.Created($"/users/{updatedUsers.Entity.Id}", updatedUsers.Entity);
 });
 
 app.MapGet("/loans", async (LibraryDb db) =>
@@ -107,7 +107,7 @@ app.MapPost("/loans/checkout", async (LoansDTO loans, LibraryDb db) =>
     var updatedLoans = db.LibraryLoans.Add(loansToAdd);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/books/{updatedLoans.Entity.Id}", updatedLoans.Entity);
+    return Results.Created($"/loans/checkout/{updatedLoans.Entity.Id}", updatedLoans.Entity);
 });
 
 app.MapPost("/loans/returns", async (Loans loans, LibraryDb db) =>
@@ -115,7 +115,7 @@ app.MapPost("/loans/returns", async (Loans loans, LibraryDb db) =>
     db.LibraryLoans.Add(loans);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/returns/{loans.Id}", loans);
+    return Results.Created($"/loans/returns/{loans.Id}", loans);
 });
 
 app.Run();
