@@ -103,12 +103,18 @@ app.MapPost("/loans", async (LoansDTO loans, LibraryDb db) =>
         BookId = loans.BookId,
         UserId = loans.UserId
     };
+
     var book = await db.LibraryBooks.FindAsync(loans.BookId);
     if (book == null)
     {
         return Results.BadRequest($"Book with ID {loans.BookId} does not exist.");
     }
-    
+
+    if (book.IsLoaned)
+    {
+        return Results.BadRequest($"Book with ID {loans.BookId} is already loaned out.");
+    }
+
     book.IsLoaned = true;
 
     var userExists = await db.LibraryUsers.AnyAsync(u => u.Id == loans.UserId);
@@ -123,12 +129,28 @@ app.MapPost("/loans", async (LoansDTO loans, LibraryDb db) =>
     return Results.Created($"/loans/{updatedLoans.Entity.Id}", updatedLoans.Entity);
 });
 
-app.MapPost("/returns", async (Loans loans, LibraryDb db) =>
+app.MapPost("/returns", async (int loanId, LibraryDb db) =>
 {
-    db.LibraryLoans.Add(loans);
+    var loan = await db.LibraryLoans.FindAsync(loanId);
+    if (loan == null)
+    {
+        return Results.NotFound($"Loan with ID {loanId} does not exist.");
+    }
+    if (loan.Returned)
+    {
+        return Results.BadRequest($"Loan with ID {loanId} has already been returned.");
+    }
+
+    loan.Returned = true;
+
+    var book = await db.LibraryBooks.FindAsync(loan.BookId);
+    if (book != null)
+    {
+        book.IsLoaned = false;
+    }
     await db.SaveChangesAsync();
 
-    return Results.Created($"/returns/{loans.Id}", loans);
+    return Results.Ok($"Book with id {loan.BookId} has been returend.");
 });
 
 app.Run();
