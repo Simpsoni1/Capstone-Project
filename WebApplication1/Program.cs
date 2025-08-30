@@ -103,6 +103,19 @@ app.MapPost("/loans", async (LoansDTO loans, LibraryDb db) =>
         BookId = loans.BookId,
         UserId = loans.UserId
     };
+    var book = await db.LibraryBooks.FindAsync(loans.BookId);
+    if (book == null)
+    {
+        return Results.BadRequest($"Book with ID {loans.BookId} does not exist.");
+    }
+    
+    book.IsLoaned = true;
+
+    var userExists = await db.LibraryUsers.AnyAsync(u => u.Id == loans.UserId);
+    if (!userExists)
+    {
+        return Results.BadRequest($"User with ID {loans.UserId} does not exist.");
+    }
 
     var updatedLoans = db.LibraryLoans.Add(loansToAdd);
     await db.SaveChangesAsync();
