@@ -112,7 +112,7 @@ app.MapPost("/loans", async (LoansDTO loans, LibraryDb db) =>
 
     if (book.IsLoaned)
     {
-        return Results.BadRequest($"Book with ID {loans.BookId} is already loaned out.");
+        return Results.BadRequest($"Book with ID {loans.BookId} is already been loaned.");
     }
 
     book.IsLoaned = true;
@@ -150,7 +150,7 @@ app.MapPost("/returns", async (int loanId, LibraryDb db) =>
     }
     await db.SaveChangesAsync();
 
-    return Results.Ok($"Book with id {loan.BookId} has been returend.");
+    return Results.Ok($"Book with ID {loan.BookId} has been returend.");
 });
 
 app.Run();
